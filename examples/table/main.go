@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
@@ -38,7 +39,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error creating extension: %s\n", err)
 	}
-	server.RegisterPlugin(table.NewPlugin("example_table", ExampleColumns(), ExampleGenerate))
+	server.RegisterPlugin(table.NewWritablePlugin("example_table", ExampleColumns(), ExampleGenerate, ExampleInsert, ExampleDelete))
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
 	}
@@ -60,6 +61,29 @@ func ExampleGenerate(ctx context.Context, queryContext table.QueryContext) ([]ma
 			"integer": "123",
 			"big_int": "-1234567890",
 			"double":  "3.14159",
+		},
+	}, nil
+}
+
+func ExampleInsert(ctx context.Context, values *table.ValueArrayJSON) ([]map[string]string, error) {
+	// fmt.Println(values)
+	for _, value := range values.Values {
+		fmt.Println(value)
+	}
+	return []map[string]string{
+		{
+			"id":     "1",
+			"status": "success",
+		},
+	}, nil
+}
+
+func ExampleDelete(ctx context.Context, queryContext table.QueryContext) ([]map[string]string, error) {
+	fmt.Println(queryContext)
+	fmt.Println("DELETING")
+	return []map[string]string{
+		{
+			"status": "success",
 		},
 	}, nil
 }

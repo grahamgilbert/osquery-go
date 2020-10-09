@@ -182,7 +182,7 @@ type Constraint struct {
 // Operator is an enum of the osquery operators.
 type Operator int
 
-// The following operators are dfined in osquery tables.h.
+// The following operators are defined in osquery tables.h.
 const (
 	OperatorEquals              Operator = 2
 	OperatorGreaterThan                  = 4
